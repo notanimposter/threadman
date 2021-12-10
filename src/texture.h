@@ -8,6 +8,9 @@ struct rgba {
 	Uint8 r, g, b, a;
 };
 
+/**
+ * Represents an info map that doesn't get rendered and can be indexed
+ */
 class map {
 	private:
 		SDL_Surface* surface;
@@ -26,6 +29,9 @@ class map {
 			return color;
 		}
 };
+/**
+ * Represents a texture to be rendered
+ */
 class texture {
 	private:
 		SDL_Texture* tex;

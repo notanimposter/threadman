@@ -13,7 +13,7 @@ void specific_ghost_ai (entity* ghost, int* x, int* y) {
 		if (game.ghost_mode == 0) {
 			*x = 2;
 			*y = 0;
-		} else {
+		} else { // chase pac-man
 			game.man->lock.lock_shared ();
 			to_tile (game.man->get_center_x (), game.man->get_center_y (), x, y);
 			game.man->lock.unlock_shared ();
@@ -22,7 +22,7 @@ void specific_ghost_ai (entity* ghost, int* x, int* y) {
 		if (game.ghost_mode == 0) {
 			*x = 25;
 			*y = 0;
-		} else {
+		} else { // chase 4 units in front of pac-man
 			game.man->lock.lock_shared ();
 			int tempx, tempy;
 			to_tile (game.man->get_center_x (), game.man->get_center_y (), &tempx, &tempy);
@@ -40,7 +40,7 @@ void specific_ghost_ai (entity* ghost, int* x, int* y) {
 		if (game.ghost_mode == 0) {
 			*x = 27;
 			*y = 35;
-		} else {
+		} else { // chase a spot near pac-man on the other side of blinky
 			game.man->lock.lock_shared ();
 			int tempx, tempy;
 			to_tile (game.man->get_center_x (), game.man->get_center_y (), &tempx, &tempy);
@@ -64,7 +64,7 @@ void specific_ghost_ai (entity* ghost, int* x, int* y) {
 		if (game.ghost_mode == 0) {
 			*x = 0;
 			*y = 35;
-		} else {
+		} else { // chase pac-man or the bottom left corner depending on distance to pac-man
 			game.man->lock.lock_shared ();
 			int tempx, tempy;
 			to_tile (game.man->get_center_x (), game.man->get_center_y (), &tempx, &tempy);
@@ -91,6 +91,7 @@ void to_tile (int x, int y, int* tilex, int* tiley) {
 
 void ghost_ai (entity* ghost) {
 	while (!game.should_quit) {
+		// get the target point based on this ghost's specific behavior
 		int target_tile_x, target_tile_y;
 		specific_ghost_ai (ghost, &target_tile_x, &target_tile_y);
 		ghost->lock.lock_shared ();
@@ -98,6 +99,8 @@ void ghost_ai (entity* ghost) {
 		int ghost_center_x = ghost->get_center_x ();
 		int ghost_center_y = ghost->get_center_y ();
 		to_tile (ghost_center_x, ghost_center_y, &ghost_tile_x, &ghost_tile_y);
+		
+		// which way should we turn?
 		
 		int rotation, xmove, ymove;
 		int r, test_xmove, test_ymove, x, y;
@@ -122,6 +125,9 @@ void ghost_ai (entity* ghost) {
 		if (ghost_center_x % 8 == 4 && ghost_center_y % 8 == 4 && (ghost_tile_x+xmove > 27 || ghost_tile_x+xmove < 0 || game.maps["walkable"]->lookup (ghost_tile_x + xmove, ghost_tile_y+ymove).a > 127)) {
 			ghost->facing = rotation;
 		}
+		
+		// move forward
+		
 		rotation = ghost->facing;
 		xmove = ((rotation + 1) % 2) * -1 * (rotation - 1);
 		ymove = (rotation % 2) * (rotation - 2);

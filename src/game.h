@@ -9,8 +9,15 @@
 #include <thread>
 #include <atomic>
 
+/**
+ * Converts a pixel location into a tile location
+ */
 void to_tile (int x, int y, int* tilex, int* tiley);
 
+
+/**
+ * Entity format with a sprite, a location, a rotation, and a shared mutex for multithreading
+ */
 struct entity {
 	int x, y;
 	texture* sprite;
@@ -23,7 +30,9 @@ struct entity {
 		return (y + sprite->height / 2);
 	}
 };
-
+/**
+ * Basically a bunch of globals and lists of assets/entities
+ */
 struct GameInfo {
 	SDL_Window* window;
 	SDL_Renderer* renderer;
@@ -42,6 +51,9 @@ struct GameInfo {
 
 extern GameInfo game;
 
+/**
+ * Moves a ghost entity according to its correct AI
+ */
 void ghost_ai (entity* ghost);
 
 #endif
